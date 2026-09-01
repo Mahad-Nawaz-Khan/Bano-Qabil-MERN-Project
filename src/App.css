@@ -1,0 +1,10 @@
+.page-loader {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+}
+
+.admin-main {
+  min-height: 100vh;
+  padding-top: 0;
+}

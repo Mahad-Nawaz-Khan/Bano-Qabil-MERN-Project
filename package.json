@@ -1,0 +1,23 @@
+{
+  "name": "ghalib-restaurant-react",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:admin": "vite --config vite.admin.config.js",
+    "build": "vite build",
+    "build:admin": "vite build --config vite.admin.config.js",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "antd": "^6.6.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.8"
+  }
+}

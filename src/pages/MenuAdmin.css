@@ -1,0 +1,18 @@
+.admin-layout { min-height: 100vh; background: #f5f6f8; }
+.admin-header { display: flex; align-items: center; justify-content: space-between; background: #102e2c; padding: 0 5%; color: #fff; }
+.admin-header a { color: #fff; }
+.brand { font-size: 1.05rem; font-weight: 700; letter-spacing: .12em; }
+.brand span { color: #d8b56a; font-size: .7rem; margin-left: .25rem; }
+.admin-content { max-width: 1300px; width: 100%; margin: 0 auto; padding: 40px 24px 64px; }
+.admin-title { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+.admin-title h2 { margin: 4px 0; color: #102e2c; }
+.eyebrow { color: #8e6f31; font-size: .72rem; letter-spacing: .14em; font-weight: 700; }
+.api-alert { margin-bottom: 20px; }
+.stats-row { margin-bottom: 20px; }
+.admin-table-card { box-shadow: 0 8px 24px rgba(16, 46, 44, .07); }
+.food-thumb { width: 42px; height: 42px; border-radius: 8px; display: grid; place-items: center; background: #f5efe3; overflow: hidden; font-size: 1.2rem; }
+.food-thumb img { height: 100%; width: 100%; object-fit: cover; }
+.new-category { margin-bottom: 16px; }
+.full-width { width: 100%; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+@media (max-width: 576px) { .admin-content { padding: 28px 16px; } .admin-title { align-items: flex-start; flex-direction: column; } .admin-title > button { width: 100%; } }

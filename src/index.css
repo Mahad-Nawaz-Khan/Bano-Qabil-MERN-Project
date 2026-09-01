@@ -1,0 +1,38 @@
+:root {
+  --primary-color: #0b2c2d;
+  --secondary-color: #ffffff;
+  --hover-color: #cdb894;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Times New Roman", Times, serif;
+}
+
+body {
+  background-image: url("/images/backgroundimage.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+}
+
+main {
+  min-height: 100vh;
+  padding-top: 90px;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font-family: inherit;
+}
