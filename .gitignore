@@ -4,3 +4,6 @@ dist-admin/
 .env
 backend/node_modules/
 backend/.env
+.claude
+.zcode
+.vscode
