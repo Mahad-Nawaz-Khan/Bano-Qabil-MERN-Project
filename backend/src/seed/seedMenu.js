@@ -19,7 +19,7 @@ const supportedExtensions = new Map([
 
 async function getMenuData() {
   const source = await fs.readFile(menuDataPath, "utf8");
-  const expression = source.replace(/^\s*export\s+const\s+menuData\s*=\s*/, "").replace(/;\s*$/, "");
+  const expression = source.replace(/^[\s\S]*?export\s+const\s+menuData\s*=\s*/, "").replace(/;\s*$/, "");
   return new Function(`return (${expression})`)();
 }
 
