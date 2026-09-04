@@ -1,19 +1,9 @@
-import mongoose from "mongoose";
 import { Category } from "../models/Category.js";
 import { MenuItem } from "../models/MenuItem.js";
-
-const asyncHandler = (handler) => (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
-
-function requireId(id) {
-  if (!mongoose.isValidObjectId(id)) {
-    const error = new Error("Invalid resource id");
-    error.status = 400;
-    throw error;
-  }
-}
+import { AppError, asyncHandler, requireId } from "../utils/errors.js";
 
 export const getPublicMenu = asyncHandler(async (_req, res) => {
-  const categories = await Category.find().sort({ name: 1 }).lean();
+  const categories = await Category.find().sort({ sortOrder: 1, name: 1 }).lean();
   const items = await MenuItem.find({ isAvailable: true }).sort({ name: 1 }).lean();
   const data = categories.map((category) => ({
     ...category,
@@ -23,7 +13,7 @@ export const getPublicMenu = asyncHandler(async (_req, res) => {
   res.json({ data });
 });
 
-export const getCategories = asyncHandler(async (_req, res) => res.json({ data: await Category.find().sort({ name: 1 }) }));
+export const getCategories = asyncHandler(async (_req, res) => res.json({ data: await Category.find().sort({ sortOrder: 1, name: 1 }) }));
 export const createCategory = asyncHandler(async (req, res) => {
   const category = await Category.create(req.body);
   res.status(201).json({ message: "Category created", data: category });
@@ -45,7 +35,12 @@ export const deleteCategory = asyncHandler(async (req, res) => {
 });
 
 export const getItems = asyncHandler(async (req, res) => {
-  const filter = req.query.includeInactive === "true" ? {} : { isAvailable: true };
+  const wantsInactive = req.query.includeInactive === "true";
+  if (wantsInactive) {
+    if (!req.user) throw new AppError("Sign in to continue", 401);
+    if (req.user.role !== "admin") throw new AppError("You do not have access to this action", 403);
+  }
+  const filter = wantsInactive ? {} : { isAvailable: true };
   res.json({ data: await MenuItem.find(filter).populate("category", "name slug").sort({ createdAt: -1 }) });
 });
 export const createItem = asyncHandler(async (req, res) => {

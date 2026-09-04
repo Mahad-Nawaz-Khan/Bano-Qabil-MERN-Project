@@ -1,0 +1,190 @@
+/* ===================== 404 — The Unset Table ===================== */
+/* Full-viewport dark lattice field under the fixed navbar, carrying the
+   hero's lantern-gold wordmark treatment so an unknown URL still reads as
+   part of the room. Self-contained: no classes shared with page CSS. */
+
+.nf {
+  min-height: calc(100vh - var(--navbar-h));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 20px 24px;
+  background-color: var(--pattern-green);
+  background-image: var(--lattice-image);
+  background-repeat: repeat;
+  background-position: top center;
+  background-size: var(--lattice-size);
+  border-top: 1px solid rgba(205, 184, 148, 0.55);
+}
+
+.nf-inner {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: nf-rise 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes nf-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.nf-eyebrow {
+  color: var(--hover-color);
+  font-size: clamp(0.62rem, 1.9vw, 0.78rem);
+  letter-spacing: 0.46em;
+  text-indent: 0.23em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: clamp(14px, 2.6vw, 22px);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
+}
+
+/* Tracked digits sit half a letter-space left of true centre; text-indent of
+   half the tracking corrects it — same trick as the hero wordmark. */
+.nf-code {
+  font-size: clamp(5.6rem, 23vw, 14rem);
+  line-height: 0.9;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-indent: 0.05em;
+  color: #f7edd8;
+  /* drop-shadow, not text-shadow: background-clip:text clips the latter away. */
+  filter: drop-shadow(0 6px 26px rgba(0, 0, 0, 0.62));
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .nf-code {
+    background-image: linear-gradient(177deg,
+      #fffaf0 0%, #f6e9cd 38%, #e2cfa6 72%, var(--hover-color) 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+  }
+}
+
+.nf-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: min(300px, 70%);
+  margin: clamp(20px, 3.4vw, 30px) 0 clamp(16px, 2.8vw, 24px);
+}
+
+.nf-rule::before,
+.nf-rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(214, 195, 160, 0.28) 22%, var(--hover-color) 100%);
+}
+
+.nf-rule::after {
+  background: linear-gradient(270deg, transparent, rgba(214, 195, 160, 0.28) 22%, var(--hover-color) 100%);
+}
+
+.nf-rule i {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  background: var(--hover-color);
+  transform: rotate(45deg);
+  box-shadow: 0 0 12px rgba(205, 184, 148, 0.65);
+}
+
+.nf-tagline {
+  color: #f2ebdd;
+  font-size: clamp(1rem, 2.6vw, 1.3rem);
+  line-height: 1.62;
+  max-width: 34ch;
+  text-wrap: balance;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.8);
+}
+
+.nf-tagline b {
+  color: var(--hover-color);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.nf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: clamp(26px, 4.2vw, 40px);
+}
+
+.nf-btn {
+  display: inline-block;
+  padding: 13px 32px;
+  border-radius: 999px;
+  font-size: clamp(0.9rem, 2.1vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-indent: 0.055em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: transform 0.25s ease, background-color 0.25s ease,
+              color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.nf-btn:focus-visible {
+  outline: 2px solid var(--hover-color);
+  outline-offset: 4px;
+}
+
+.nf-btn-primary {
+  background: var(--hover-color);
+  color: var(--primary-color);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.42);
+}
+
+.nf-btn-primary:hover {
+  background: #f0e2c4;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+.nf-btn-ghost {
+  background: rgba(6, 26, 26, 0.42);
+  color: #f4ecdc;
+  border-color: rgba(232, 220, 196, 0.55);
+}
+
+.nf-btn-ghost:hover {
+  background: rgba(244, 236, 220, 0.95);
+  color: var(--primary-color);
+  border-color: transparent;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+  .nf-actions {
+    width: 100%;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nf-btn {
+    width: 100%;
+    padding: 13px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-inner { animation: none; }
+
+  .nf-btn:hover {
+    transform: none;
+  }
+}

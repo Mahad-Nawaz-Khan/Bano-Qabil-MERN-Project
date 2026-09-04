@@ -1,66 +1,124 @@
+/* Luxury fine-dining aesthetic for About Us page */
+
 .about-hero {
   display: flex;
   justify-content: center;
-  padding: 60px 20px;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px clamp(20px, 4vw, 56px) 32px;
 }
 
 .about-text {
-  max-width: 700px;
-  background: rgba(255, 255, 255, 0.75);
-  padding: 40px;
-  border-radius: 15px;
-  box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 1440px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--gold-border);
+  border-radius: 16px;
+  padding: 56px clamp(24px, 5vw, 64px);
+  box-shadow: var(--shadow-luxury), inset 0 1px 0 rgba(205, 184, 148, 0.15);
   text-align: center;
 }
 
 .about-text h1 {
-  color: var(--primary-color);
-  font-size: 2.2rem;
+  color: var(--ivory-text);
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
 .subtitle {
   color: var(--hover-color);
+  font-size: 1.22rem;
   font-style: italic;
-  margin: 10px 0;
+  letter-spacing: 0.04em;
+  margin: 12px 0 0;
 }
 
 .line {
-  width: 60px;
-  border: 2px solid var(--primary-color);
-  margin: 15px auto 20px;
+  width: 120px;
+  height: 2px;
+  border: none;
+  background: linear-gradient(90deg, transparent, var(--hover-color), transparent);
+  margin: 24px auto 34px;
 }
 
 .about-text p {
-  margin-bottom: 15px;
-  line-height: 1.6;
-  color: #333;
+  margin-bottom: 22px;
+  line-height: 1.9;
+  color: var(--ivory-text);
+  font-size: 1.12rem;
   text-align: left;
+  opacity: 0.94;
+}
+
+.about-text p:last-child {
+  margin-bottom: 0;
 }
 
 .values {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
-  padding: 20px 20px 80px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  gap: 28px;
+  padding: 0 clamp(20px, 4vw, 56px) 80px;
 }
 
 .value-card {
-  width: 260px;
-  background: rgba(255, 255, 255, 0.75);
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.15);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--gold-border);
+  border-radius: 14px;
+  padding: 38px 30px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
   text-align: center;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.value-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--hover-color);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.5), 0 0 20px rgba(205, 184, 148, 0.15);
 }
 
 .value-card h3 {
-  color: var(--primary-color);
-  margin-bottom: 10px;
-  font-size: 1.3rem;
+  color: var(--hover-color);
+  margin-bottom: 14px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .value-card p {
-  color: #333;
-  line-height: 1.5;
+  color: var(--ivory-text);
+  line-height: 1.7;
+  font-size: 1.02rem;
+  opacity: 0.88;
+}
+
+@media (max-width: 900px) and (min-width: 601px) {
+  .values {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .value-card:nth-child(3) {
+    grid-column: 1 / -1;
+    width: min(100%, calc(50% - 14px));
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .values {
+    grid-template-columns: 1fr;
+  }
+  .about-text {
+    padding: 32px 20px;
+  }
 }

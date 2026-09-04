@@ -1,6 +1,10 @@
+/* Dark scrim, not a white one: the bar now crosses a cream sash and ten
+   sand banner strips, where white-on-translucent-white fell to 1.05:1.
+   At 0.78 over cream, white reads 9.2:1 and the gold hover state 4.9:1. */
 .navbar {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(0.5px);
+  background: rgba(6, 26, 26, 0.78);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(205, 184, 148, 0.14);
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +16,11 @@
   z-index: 2000;
 }
 
+/* display:block so the bar's height is a deterministic 84px (15+54+15).
+   As an inline element the img adds a baseline descender gap, which made the
+   --navbar-h token the hero and every scroll-margin depend on ~88px instead. */
 .logo img {
+  display: block;
   margin-top: 4px;
   height: 50px;
   object-fit: cover;
@@ -37,18 +45,20 @@
   cursor: pointer;
 }
 
+/* Sand, not dark green — the button now sits on a dark bar, where the old
+   --primary-color fill would disappear into it. Matches the hero CTA. 7.7:1. */
 .reserve-btn a {
   display: inline-block;
   padding: 10px 20px;
   font-weight: 900;
   font-size: large;
-  background-color: var(--primary-color);
-  border-radius: 12px;
-  color: var(--secondary-color) !important;
+  background-color: var(--hover-color);
+  border-radius: 999px;
+  color: var(--primary-color) !important;
 }
 
 .reserve-btn a:hover {
-  background-color: var(--hover-color);
+  background-color: #f0e2c4;
   color: var(--primary-color) !important;
 }
 
@@ -58,6 +68,80 @@
   gap: 5px;
   cursor: pointer;
   z-index: 3000;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+
+.hamburger:focus-visible {
+  outline: 2px solid var(--hover-color);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.nav-icon-btn {
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+}
+
+.nav-icon-btn:hover {
+  color: var(--hover-color);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -10px;
+  right: -16px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--hover-color);
+  color: var(--primary-color);
+  font-size: 0.75rem;
+  line-height: 20px;
+  text-align: center;
+}
+
+.account-menu {
+  position: relative;
+}
+
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 170px;
+  background: rgba(11, 44, 45, 0.97);
+  border-radius: 10px;
+  padding: 8px 0;
+  display: grid;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+}
+
+.account-dropdown li a,
+.account-dropdown li button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  color: var(--secondary-color);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.account-dropdown li a:hover,
+.account-dropdown li button:hover {
+  color: var(--hover-color);
 }
 
 .hamburger span {
@@ -77,18 +161,35 @@
     top: 0;
     right: -260px;
     width: 250px;
-    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
     background: rgba(11, 44, 45, 0.95);
     backdrop-filter: blur(26px);
     flex-direction: column;
     align-items: flex-start;
-    padding: 100px 25px;
+    padding: 100px 25px 40px;
     gap: 20px;
-    transition: right 0.35s ease;
+    transition: right 0.35s ease, visibility 0.35s ease;
+    visibility: hidden;
+    pointer-events: none;
     z-index: 2500;
   }
 
   .nav-links.active {
     right: 0;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .account-dropdown {
+    position: static;
+    background: none;
+    box-shadow: none;
+    padding: 8px 0 0;
+  }
+
+  .account-dropdown li a,
+  .account-dropdown li button {
+    padding: 8px 0;
   }
 }
