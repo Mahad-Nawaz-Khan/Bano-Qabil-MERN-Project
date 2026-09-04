@@ -41,11 +41,15 @@ async function seedMenu() {
   const menu = await getMenuData();
   let categoryCount = 0;
   let itemCount = 0;
-  for (const section of menu) {
+  for (const [sortOrder, section] of menu.entries()) {
     let category = await Category.findOne({ name: section.category });
     if (!category) {
-      category = await Category.create({ name: section.category });
+      category = await Category.create({ name: section.category, sortOrder });
       categoryCount += 1;
+    } else if (category.sortOrder !== sortOrder) {
+      // Re-seeding keeps categories ordered as authored in menuData.
+      category.sortOrder = sortOrder;
+      await category.save();
     }
     for (const item of section.items) {
       const filename = path.basename(item.img);

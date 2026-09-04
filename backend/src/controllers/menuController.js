@@ -3,7 +3,7 @@ import { MenuItem } from "../models/MenuItem.js";
 import { AppError, asyncHandler, requireId } from "../utils/errors.js";
 
 export const getPublicMenu = asyncHandler(async (_req, res) => {
-  const categories = await Category.find().sort({ name: 1 }).lean();
+  const categories = await Category.find().sort({ sortOrder: 1, name: 1 }).lean();
   const items = await MenuItem.find({ isAvailable: true }).sort({ name: 1 }).lean();
   const data = categories.map((category) => ({
     ...category,
@@ -13,7 +13,7 @@ export const getPublicMenu = asyncHandler(async (_req, res) => {
   res.json({ data });
 });
 
-export const getCategories = asyncHandler(async (_req, res) => res.json({ data: await Category.find().sort({ name: 1 }) }));
+export const getCategories = asyncHandler(async (_req, res) => res.json({ data: await Category.find().sort({ sortOrder: 1, name: 1 }) }));
 export const createCategory = asyncHandler(async (req, res) => {
   const category = await Category.create(req.body);
   res.status(201).json({ message: "Category created", data: category });
