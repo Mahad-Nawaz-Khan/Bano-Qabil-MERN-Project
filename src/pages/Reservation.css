@@ -1,95 +1,148 @@
-#Reservation-container {
+/* Luxury fine-dining aesthetic for Reservation page */
+
+.reservation-page {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 40px 3%;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px clamp(20px, 4vw, 56px) 80px;
+  min-height: calc(100vh - var(--navbar-h));
 }
 
-#title {
-  font-size: 30px;
-  font-weight: bold;
+.reservation-page .reservation-title {
+  font-size: clamp(2.2rem, 5vw, 3rem);
+  font-weight: 400;
   text-align: center;
-  color: var(--secondary-color);
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(3px);
-  padding: 10px 20px;
-  border-radius: 6px;
-  margin-bottom: 25px;
+  color: var(--ivory-text);
+  letter-spacing: 0.08em;
+  margin-bottom: 24px;
+  position: relative;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
-.msg-box {
-  display: none;
+.reservation-page .reservation-title::after {
+  content: "";
+  display: block;
+  width: 70px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--hover-color), transparent);
+  margin: 12px auto 0;
+}
+
+.reservation-page .msg-box {
   position: fixed;
-  top: -80px;
+  top: -100px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--primary-color);
-  color: white;
-  padding: 14px 22px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--hover-color);
+  color: var(--ivory-text);
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
   z-index: 9999;
-  min-width: 300px;
+  min-width: 320px;
   max-width: 90%;
   text-align: center;
-  transition: top 0.5s ease, opacity 0.4s ease;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(205, 184, 148, 0.18);
   opacity: 0;
+  pointer-events: none;
+  /* Stays rendered in the accessibility tree while hidden (offscreen +
+     transparent, no visibility:hidden) so role="alert"/"status" text changes
+     are actually announced. */
+  transition: top 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+              opacity 0.4s ease;
 }
 
-.msg-box.show {
-  top: 100px;
+.reservation-page .msg-box.show {
+  top: calc(var(--navbar-h) + 18px);
   opacity: 1;
-  display: block;
+  pointer-events: auto;
 }
 
-.msg-box.error {
-  background: #f44336;
+.reservation-page .msg-box.error {
+  background: rgba(110, 24, 24, 0.96);
+  border-color: rgba(240, 90, 90, 0.6);
+  color: #ffcccc;
 }
 
-#form-div {
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(6px);
-  padding: 25px 50px 35px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.reservation-page .reservation-form-container {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--gold-border);
+  border-radius: 16px;
+  padding: 38px 42px 42px;
+  box-shadow: var(--shadow-luxury), inset 0 1px 0 rgba(205, 184, 148, 0.15);
   width: 100%;
-  max-width: 400px;
+  max-width: 620px;
 }
 
-label {
+.reservation-page label {
   display: block;
-  margin-top: 12px;
-  color: var(--primary-color);
-  font-weight: bold;
+  margin-top: 16px;
+  color: var(--ivory-text);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
 }
 
-input {
+.reservation-page label:first-child {
+  margin-top: 0;
+}
+
+.reservation-page input {
   outline: none;
-  border-radius: 30px;
+  border-radius: 8px;
   width: 100%;
-  padding: 8px 14px;
-  margin: 6px 0;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid var(--primary-color);
-  color: var(--primary-color);
+  padding: 12px 14px;
+  margin: 6px 0 0;
+  background: var(--glass-bg-subtle);
+  border: 1px solid var(--gold-border);
+  color: var(--ivory-text);
+  font-size: 1rem;
+  color-scheme: dark;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
-#btn {
-  background-color: var(--primary-color);
-  color: var(--secondary-color);
+.reservation-page input:focus {
+  border-color: var(--hover-color);
+  background: rgba(6, 26, 26, 0.9);
+  box-shadow: 0 0 0 3px rgba(205, 184, 148, 0.25);
+}
+
+.reservation-page .reservation-submit-btn {
+  background: var(--hover-color);
+  color: var(--primary-color);
   border: none;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 12px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  padding: 13px 20px;
   width: 100%;
-  border-radius: 30px;
-  margin-top: 15px;
+  border-radius: 999px;
+  margin-top: 26px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
-#btn:hover {
-  background-color: var(--hover-color);
+.reservation-page .reservation-submit-btn:hover {
+  background: #f0e2c4;
   color: var(--primary-color);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 520px) {
+  .reservation-page .reservation-form-container {
+    padding: 28px 20px 32px;
+  }
 }

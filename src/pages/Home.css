@@ -1,64 +1,463 @@
-.heading {
+/* ========================= HERO — Lantern Court ========================= */
+/* Full-bleed cinematic overture. The negative margin cancels main's
+   padding-top so the photo runs under the fixed navbar; the clearance comes
+   back as internal padding so no copy hides behind it. */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  margin-top: calc(-1 * var(--navbar-h));
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   text-align: center;
-  padding: 80px 20px;
-  font-size: xx-large;
-  font-weight: 900;
-  color: var(--secondary-color);
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  padding: calc(var(--navbar-h) + 42px) 20px 96px;
+  /* Lantern-light approximation of the photo, so the hero reads as finished
+     before the PNG lands — and stays presentable if it never does. */
+  background-color: #120c06;
+  background-image:
+    radial-gradient(115% 78% at 50% 16%, rgba(186, 118, 46, 0.32), transparent 62%),
+    radial-gradient(78% 58% at 50% 88%, rgba(8, 5, 3, 0.9), transparent),
+    linear-gradient(#1b1108, #0b0704);
+}
+
+.hero-photo {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 58%;
+  transform: scale(1.06);
+  animation: hero-drift 32s ease-in-out infinite alternate;
+}
+
+@keyframes hero-drift {
+  from { transform: scale(1.06); }
+  to   { transform: scale(1.14) translate3d(0, -1.2%, 0); }
+}
+
+/* Scrim. A pseudo-element rather than a child div, but still its own layer:
+   .hero's own background paints before any negative-z-index child, so folding
+   these gradients into .hero would put them *under* the photo. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(74% 52% at 50% 46%,
+      rgba(4, 20, 19, 0.68) 0%,
+      rgba(4, 20, 19, 0.46) 48%,
+      rgba(4, 20, 19, 0) 78%),
+    linear-gradient(to bottom,
+      rgba(3, 14, 13, 0.9) 0%,
+      rgba(4, 20, 19, 0.46) 22%,
+      rgba(4, 20, 19, 0.44) 60%,
+      rgba(4, 18, 17, 0.8) 92%,
+      rgba(3, 14, 13, 0.94) 100%);
+}
+
+.hero-inner {
+  width: 100%;
+  max-width: 920px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: hero-rise 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Tracked capitals sit half a letter-space left of true centre, because the
+   trailing space is inside the text box. text-indent of half the tracking
+   corrects it — same trick on the wordmark and the buttons. */
+.hero-eyebrow {
+  color: var(--hover-color);
+  font-size: clamp(0.62rem, 1.9vw, 0.78rem);
+  letter-spacing: 0.46em;
+  text-indent: 0.23em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: clamp(16px, 3vw, 26px);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
+}
+
+.hero-wordmark {
+  font-size: clamp(3.1rem, 13vw, 9.5rem);
+  line-height: 0.92;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-indent: 0.07em;
+  color: #f7edd8;
+  /* drop-shadow, not text-shadow: background-clip:text clips the latter away. */
+  filter: drop-shadow(0 6px 26px rgba(0, 0, 0, 0.62));
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero-wordmark {
+    background-image: linear-gradient(177deg,
+      #fffaf0 0%, #f6e9cd 38%, #e2cfa6 72%, var(--hover-color) 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+  }
+}
+
+.hero-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: min(340px, 74%);
+  margin: clamp(20px, 3.4vw, 32px) 0 clamp(18px, 3vw, 28px);
+}
+
+.hero-rule::before,
+.hero-rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(214, 195, 160, 0.28) 22%, var(--hover-color) 100%);
+}
+
+.hero-rule::after {
+  background: linear-gradient(270deg, transparent, rgba(214, 195, 160, 0.28) 22%, var(--hover-color) 100%);
+}
+
+.hero-rule i {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  background: var(--hover-color);
+  transform: rotate(45deg);
+  box-shadow: 0 0 12px rgba(205, 184, 148, 0.65);
+}
+
+.hero-tagline {
+  color: #f2ebdd;
+  font-size: clamp(1rem, 2.6vw, 1.42rem);
+  line-height: 1.62;
+  max-width: 30ch;
+  text-wrap: balance;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.8);
+}
+
+.hero-tagline b {
+  color: var(--hover-color);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: clamp(28px, 4.6vw, 44px);
+}
+
+.hero-btn {
+  display: inline-block;
+  padding: 14px 34px;
+  border-radius: 999px;
+  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-indent: 0.055em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: transform 0.25s ease, background-color 0.25s ease,
+              color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-btn:focus-visible {
+  outline: 2px solid var(--hover-color);
+  outline-offset: 4px;
+}
+
+.hero-btn-primary {
+  background: var(--hover-color);
+  color: var(--primary-color);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.42);
+}
+
+.hero-btn-primary:hover {
+  background: #f0e2c4;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+.hero-btn-ghost {
+  background: rgba(6, 26, 26, 0.42);
+  color: #f4ecdc;
+  border-color: rgba(232, 220, 196, 0.55);
+}
+
+.hero-btn-ghost:hover {
+  background: rgba(244, 236, 220, 0.95);
+  color: var(--primary-color);
+  border-color: transparent;
+  transform: translateY(-2px);
+}
+
+/* ===================== WELCOME SASH ===================== */
+/* The only light band on the page: it separates a photographic hero from a
+   hard dark field and carries the primary CTA at ~14:1. */
+
+.heading {
+  background: #fbf7ef;
+  border-top: 1px solid rgba(205, 184, 148, 0.55);
+  text-align: center;
+  padding: clamp(46px, 7vw, 72px) 20px;
+  color: var(--primary-color);
+}
+
+.heading p:first-child {
+  font-size: clamp(1.5rem, 4.4vw, 2.5rem);
+  font-weight: 700;
+}
+
+.heading p:nth-child(2) {
+  margin-top: 10px;
+  font-size: clamp(0.95rem, 2.3vw, 1.15rem);
+  letter-spacing: 0.22em;
+  text-indent: 0.11em;
+  text-transform: uppercase;
+  color: #6d6152;
 }
 
 .menu-btn {
-  padding: 10px 25px;
-  cursor: pointer;
-  font-size: larger;
-  font-weight: bolder;
-  background-color: var(--primary-color);
-  border-radius: 12px;
-  color: #ffffff;
+  display: inline-block;
+  margin-top: clamp(22px, 3.4vw, 34px);
+  padding: 14px 40px;
   border: none;
-  margin-top: 30px;
+  border-radius: 999px;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  font-size: clamp(0.9rem, 2.1vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-indent: 0.055em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
 }
 
 .menu-btn:hover {
   background-color: var(--hover-color);
   color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.menu-btn:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 3px;
+}
+
+/* ===================== MENU AREA ===================== */
+.menu-area {
+  --menu-w: 1440px;
+  scroll-margin-top: calc(var(--navbar-h) + 14px);
+  background-color: var(--pattern-green);
+  background-image: var(--lattice-image);
+  background-repeat: repeat;
+  background-position: top center;
+  background-size: var(--lattice-size);
+  border-top: 1px solid rgba(205, 184, 148, 0.55);
+  padding: clamp(30px, 5vw, 54px) 0 clamp(48px, 7vw, 80px);
 }
 
 .main-container {
-  padding: 20px 0 60px;
+  width: 100%;
+  max-width: var(--menu-w);
+  margin: 0 auto;
+  padding: 0 clamp(16px, 3vw, 40px);
+}
+
+.menu-area section[id] {
+  scroll-margin-top: calc(var(--navbar-h) + 14px);
 }
 
 .banner {
   display: flex;
   justify-content: center;
-  padding: 60px 0 0;
+  padding: clamp(34px, 5.5vw, 56px) 0 clamp(10px, 1.5vw, 18px);
 }
 
+/* Native size is 1000x300; keep original size so artwork stays crisp and not oversized. */
+.banner-img {
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
+  aspect-ratio: 10 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+}
+
+/* Fallback for categories with no artwork, and for a banner that 404s. */
 .category-title {
-  background: rgba(255, 255, 255, 0.6);
-  padding: 12px 40px;
-  border-radius: 15px;
-  box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 1000px;
+  background: linear-gradient(100deg, #eee4cf, #fbf7ef 55%, #eee4cf);
+  border-radius: 10px;
+  padding: clamp(18px, 3.6vw, 34px) 24px;
+  text-align: center;
   color: var(--primary-color);
-  font-size: 1.8rem;
+  font-size: clamp(1.5rem, 4.4vw, 2.4rem);
+  letter-spacing: 0.06em;
+  text-indent: 0.03em;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
 }
 
 .plater-con {
-  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
   justify-content: center;
-  padding: 40px 20px;
+  gap: 24px 18px;
+  width: 100%;
+  padding: clamp(18px, 3vw, 26px) 0 0;
 }
 
-@media (max-width: 600px) {
-  .heading {
-    font-size: 22px;
-    padding: 50px 15px;
+.plater-con .product-card {
+  flex: 0 0 calc((100% - 3 * 18px) / 4);
+  max-width: 320px;
+}
+
+@media (max-width: 1024px) {
+  .plater-con .product-card {
+    flex: 0 0 calc((100% - 2 * 18px) / 3);
   }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    max-width: none;
+  }
+
+  .plater-con {
+    gap: 16px 12px;
+  }
+
+  .plater-con .product-card {
+    flex: 0 0 calc((100% - 12px) / 2);
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .plater-con {
+    gap: 16px;
+  }
+
+  .plater-con .product-card {
+    flex: 0 0 100%;
+    max-width: 340px;
+  }
+
+  .banner-img,
   .category-title {
-    font-size: 1.2rem;
-    padding: 8px 20px;
+    border-radius: 8px;
+  }
+}
+
+/* ===================== HERO RESPONSIVE ===================== */
+
+@media (max-width: 760px) {
+  .hero {
+    padding: calc(var(--navbar-h) + 30px) 18px 88px;
+  }
+
+  /* The centre of this frame is empty ceiling at narrow widths. */
+  .hero-photo {
+    object-position: 38% 46%;
+  }
+
+  /* A 360px crop of the photo is already far darker than the 1440px one. */
+  .hero::before {
+    background:
+      radial-gradient(92% 44% at 50% 50%,
+        rgba(4, 20, 19, 0.6) 0%,
+        rgba(4, 20, 19, 0.38) 56%,
+        rgba(4, 20, 19, 0.06) 88%),
+      linear-gradient(to bottom,
+        rgba(3, 14, 13, 0.78) 0%,
+        rgba(4, 20, 19, 0.24) 24%,
+        rgba(4, 20, 19, 0.26) 60%,
+        rgba(4, 18, 17, 0.76) 92%,
+        rgba(3, 14, 13, 0.92) 100%);
+  }
+
+  .hero-actions {
+    width: 100%;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-btn {
+    width: 100%;
+    padding: 14px 20px;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-wordmark {
+    letter-spacing: 0.09em;
+    text-indent: 0.045em;
+  }
+
+  .hero-eyebrow {
+    letter-spacing: 0.3em;
+    text-indent: 0.15em;
+  }
+}
+
+/* Phone rotated: without this the centred column overflows its padding box
+   and slides up under the fixed navbar. */
+@media (max-height: 620px) and (orientation: landscape) {
+  .hero {
+    min-height: 0;
+    padding: calc(var(--navbar-h) + 28px) 20px 48px;
+  }
+
+  .hero-wordmark { font-size: clamp(2.4rem, 7.2vw, 4rem); }
+  .hero-eyebrow  { margin-bottom: 10px; font-size: 0.6rem; }
+  .hero-rule     { margin: 14px 0 12px; }
+  .hero-tagline  { font-size: 1rem; max-width: 46ch; }
+
+  .hero-actions {
+    margin-top: 22px;
+    flex-direction: row;
+    max-width: none;
+  }
+
+  .hero-btn { width: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-photo,
+  .hero-inner {
+    animation: none;
+  }
+
+  .hero-photo { transform: scale(1.02); }
+
+  .hero-btn:hover,
+  .menu-btn:hover {
+    transform: none;
   }
 }
