@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Alert,
+  App,
   Button,
   Card,
   Col,
@@ -8,7 +9,6 @@ import {
   Form,
   Input,
   InputNumber,
-  Layout,
   Modal,
   Popconfirm,
   Row,
@@ -20,12 +20,10 @@ import {
   Tabs,
   Tag,
   Typography,
-  message,
 } from "antd";
 import { menuApi } from "../services/menuApi.js";
 import "./MenuAdmin.css";
 
-const { Header, Content } = Layout;
 const { Title, Text } = Typography;
 
 function getError(error) {
@@ -33,6 +31,8 @@ function getError(error) {
 }
 
 export default function MenuAdmin() {
+  // Static antd message helpers cannot read ConfigProvider context in v6, so use the App hook.
+  const { message } = App.useApp();
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,8 +75,9 @@ export default function MenuAdmin() {
   const saveItem = async (values) => {
     setSaving(true);
     try {
-      if (itemModal.item) await menuApi.updateItem(itemModal.item._id, values);
-      else await menuApi.createItem(values);
+      const payload = { ...values, price: Math.round(Number(values.price) || 0) };
+      if (itemModal.item) await menuApi.updateItem(itemModal.item._id, payload);
+      else await menuApi.createItem(payload);
       message.success(itemModal.item ? "Menu item updated" : "Menu item added");
       setItemModal({ open: false, item: null });
       itemForm.resetFields();
@@ -115,22 +116,19 @@ export default function MenuAdmin() {
   ];
 
   return (
-    <Layout className="admin-layout">
-      <Header className="admin-header"><a href="http://localhost:5173" className="brand">GHALIB <span>ADMIN</span></a><a href="http://localhost:5173">View restaurant</a></Header>
-      <Content className="admin-content">
-        <div className="admin-title"><div><Text className="eyebrow">RESTAURANT CONTROL</Text><Title level={2}>Menu management</Title><Text type="secondary">Add, edit, hide, or remove dishes and categories.</Text></div><Button type="primary" size="large" onClick={() => openItemModal()}>+ Add menu item</Button></div>
-        {apiError && <Alert className="api-alert" type="warning" showIcon message="API is not connected" description={apiError} action={<Button size="small" onClick={loadData}>Retry</Button>} />}
-        <Row gutter={[16, 16]} className="stats-row"><Col xs={24} sm={8}><Card><Statistic title="Total dishes" value={items.length} /></Card></Col><Col xs={24} sm={8}><Card><Statistic title="Available now" value={activeItems} valueStyle={{ color: "#3f8600" }} /></Card></Col><Col xs={24} sm={8}><Card><Statistic title="Categories" value={categories.length} /></Card></Col></Row>
-        <Card className="admin-table-card"><Tabs items={[
-          { key: "items", label: "Menu items", children: items.length || loading ? <Table rowKey="_id" loading={loading} columns={itemColumns} dataSource={items} scroll={{ x: 800 }} pagination={{ pageSize: 8 }} /> : <Empty description="No menu items yet" /> },
-          { key: "categories", label: "Categories", children: <><Button className="new-category" onClick={() => { categoryForm.resetFields(); setCategoryModal({ open: true, category: null }); }}>+ Add category</Button><Table rowKey="_id" loading={loading} columns={categoryColumns} dataSource={categories} scroll={{ x: 650 }} pagination={false} /></> },
-        ]} /></Card>
-      </Content>
+    <>
+      <div className="admin-title"><div><Text className="eyebrow">RESTAURANT CONTROL</Text><Title level={2}>Menu management</Title><Text type="secondary">Add, edit, hide, or remove dishes and categories.</Text></div><Button type="primary" size="large" onClick={() => openItemModal()}>+ Add menu item</Button></div>
+      {apiError && <Alert className="api-alert" type="warning" showIcon message="API is not connected" description={apiError} action={<Button size="small" onClick={loadData}>Retry</Button>} />}
+      <Row gutter={[16, 16]} className="stats-row"><Col xs={24} sm={8}><Card><Statistic title="Total dishes" value={items.length} /></Card></Col><Col xs={24} sm={8}><Card><Statistic title="Available now" value={activeItems} styles={{ content: { color: "#3f8600" } }} /></Card></Col><Col xs={24} sm={8}><Card><Statistic title="Categories" value={categories.length} /></Card></Col></Row>
+      <Card className="admin-table-card"><Tabs items={[
+        { key: "items", label: "Menu items", children: items.length || loading ? <Table rowKey="_id" loading={loading} columns={itemColumns} dataSource={items} scroll={{ x: 800 }} pagination={{ pageSize: 8 }} /> : <Empty description="No menu items yet" /> },
+        { key: "categories", label: "Categories", children: <><Button className="new-category" onClick={() => { categoryForm.resetFields(); setCategoryModal({ open: true, category: null }); }}>+ Add category</Button><Table rowKey="_id" loading={loading} columns={categoryColumns} dataSource={categories} scroll={{ x: 650 }} pagination={false} /></> },
+      ]} /></Card>
 
-      <Modal title={itemModal.item ? "Edit menu item" : "Add menu item"} open={itemModal.open} onCancel={() => setItemModal({ open: false, item: null })} footer={null} destroyOnClose>
+      <Modal title={itemModal.item ? "Edit menu item" : "Add menu item"} open={itemModal.open} onCancel={() => setItemModal({ open: false, item: null })} footer={null} destroyOnHidden>
         <Form form={itemForm} layout="vertical" onFinish={saveItem} preserve={false}>
           <Form.Item name="name" label="Dish name" rules={[{ required: true, message: "Dish name is required" }]}><Input placeholder="e.g. Chicken Mandi" /></Form.Item>
-          <Row gutter={12}><Col span={12}><Form.Item name="category" label="Category" rules={[{ required: true, message: "Choose a category" }]}><Select placeholder="Choose category" options={categories.map((category) => ({ label: category.name, value: category._id }))} /></Form.Item></Col><Col span={12}><Form.Item name="price" label="Price (Rs)" rules={[{ required: true, message: "Price is required" }]}><InputNumber min={0} className="full-width" /></Form.Item></Col></Row>
+          <Row gutter={12}><Col span={12}><Form.Item name="category" label="Category" rules={[{ required: true, message: "Choose a category" }]}><Select placeholder="Choose category" options={categories.map((category) => ({ label: category.name, value: category._id }))} /></Form.Item></Col><Col span={12}><Form.Item name="price" label="Price (Rs)" rules={[{ required: true, message: "Price is required" }]}><InputNumber min={0} precision={0} step={1} className="full-width" /></Form.Item></Col></Row>
           <Form.Item name="description" label="Description"><Input.TextArea rows={3} placeholder="Short dish description" /></Form.Item>
           <Form.Item name="image" label="Image URL"><Input placeholder="https://…" /></Form.Item>
           <Form.Item name="isAvailable" label="Visible on menu" valuePropName="checked"><Switch checkedChildren="Visible" unCheckedChildren="Hidden" /></Form.Item>
@@ -138,9 +136,9 @@ export default function MenuAdmin() {
         </Form>
       </Modal>
 
-      <Modal title={categoryModal.category ? "Edit category" : "Add category"} open={categoryModal.open} onCancel={() => setCategoryModal({ open: false, category: null })} footer={null} destroyOnClose>
+      <Modal title={categoryModal.category ? "Edit category" : "Add category"} open={categoryModal.open} onCancel={() => setCategoryModal({ open: false, category: null })} footer={null} destroyOnHidden>
         <Form form={categoryForm} layout="vertical" onFinish={saveCategory} preserve={false}><Form.Item name="name" label="Category name" rules={[{ required: true, message: "Category name is required" }]}><Input placeholder="e.g. Desserts" /></Form.Item><Form.Item name="description" label="Description"><Input.TextArea rows={3} /></Form.Item><div className="modal-actions"><Button onClick={() => setCategoryModal({ open: false, category: null })}>Cancel</Button><Button type="primary" htmlType="submit" loading={saving}>Save category</Button></div></Form>
       </Modal>
-    </Layout>
+    </>
   );
 }
