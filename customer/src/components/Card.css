@@ -10,6 +10,37 @@
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
   overflow: hidden;
   text-align: center;
+  animation: card-reveal 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation-delay: var(--card-reveal-delay, 0ms);
+}
+
+@keyframes card-reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.card-reveal-left {
+  animation-name: card-reveal-left;
+}
+
+.card-reveal-right {
+  animation-name: card-reveal-right;
+}
+
+@keyframes card-reveal-left {
+  from { opacity: 0; transform: translateX(-42px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes card-reveal-right {
+  from { opacity: 0; transform: translateX(42px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card {
+    animation: none;
+  }
 }
 
 .card-media {

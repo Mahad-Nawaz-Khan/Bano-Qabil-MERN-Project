@@ -53,8 +53,14 @@ function MenuSection({ section, onOrder }) {
       </div>
 
       <div className="plater-con">
-        {section.items.map((item) => (
-          <Card key={item._id || item.name} item={item} onOrder={onOrder} />
+        {section.items.map((item, index) => (
+          <Card
+            key={item._id || item.name}
+            item={item}
+            onOrder={onOrder}
+            revealSide={index % 2 === 0 ? "left" : "right"}
+            revealDelay={index}
+          />
         ))}
       </div>
     </section>

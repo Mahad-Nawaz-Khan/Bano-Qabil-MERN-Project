@@ -8,7 +8,7 @@ const FALLBACK_IMAGE = "/images/logo.png";
 const formatPrice = (value) =>
   typeof value === "number" ? value.toLocaleString("en-PK") : value;
 
-export default function Card({ item, onOrder }) {
+export default function Card({ item, onOrder, revealSide, revealDelay = 0 }) {
   const { addItem } = useCart();
   const [isAdding, setIsAdding] = useState(false);
   const [added, setAdded] = useState(false);
@@ -42,7 +42,10 @@ export default function Card({ item, onOrder }) {
   }
 
   return (
-    <div className="product-card">
+    <div
+      className={`product-card card-reveal-${revealSide || "left"}`}
+      style={{ "--card-reveal-delay": `${Math.min(revealDelay, 5) * 80}ms` }}
+    >
       <div className="card-media">
         <img
           className={showFallback ? "card-img card-img--fallback" : "card-img"}
