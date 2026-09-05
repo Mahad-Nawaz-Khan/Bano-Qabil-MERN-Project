@@ -27,11 +27,11 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="footer-box">
+        <div className="footer-box" id="con">
           <h3 className="footer-title">Contact Us</h3>
           <p className="more-info">Email: support@ghalib.com</p>
           <p className="more-info">Phone: +92 98765 43210</p>
-          <p className="more-info">Location:  Rooftop, Habitt Building, Main Tipu Sultan Road, off Shahrah-e-Faisal, Karachi.</p>
+          <p className="more-info">Location: Rooftop, Habitt Building, Main Tipu Sultan Road, off Shahrah-e-Faisal, Karachi.</p>
           <p className="more-info">Hours: 5:00pm to 12:00am </p>
         </div>
       </div>

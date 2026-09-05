@@ -1,10 +1,10 @@
 import { request } from "./apiClient.js";
 
 export const orderApi = {
-  create: (contact, idempotencyKey) => request("/orders", {
+  create: (contact, paymentMethod, idempotencyKey) => request("/orders", {
     method: "POST",
     headers: { "Idempotency-Key": idempotencyKey },
-    body: { contact },
+    body: { contact, paymentMethod },
   }),
   list: () => request("/orders"),
   get: (id) => request(`/orders/${id}`),

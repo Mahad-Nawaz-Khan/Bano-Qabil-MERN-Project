@@ -11,6 +11,7 @@ export default function Checkout() {
   const { user } = useAuth();
   const { items, subtotal, total, refresh } = useCart();
   const [contact, setContact] = useState({ name: user?.name || "", phone: "", address: "", note: "" });
+  const [paymentMethod, setPaymentMethod] = useState("cash");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const idempotencyKey = useRef(null);
@@ -25,7 +26,7 @@ export default function Checkout() {
     setIsSubmitting(true);
     try {
       idempotencyKey.current ??= globalThis.crypto.randomUUID();
-      const data = await orderApi.create(contact, idempotencyKey.current);
+      const data = await orderApi.create(contact, paymentMethod, idempotencyKey.current);
       await refresh();
       navigate(`/orders/${data.data._id}`, { replace: true, state: { message: data.message } });
     } catch (submitError) {
@@ -74,6 +75,16 @@ export default function Checkout() {
               <span>Note for the kitchen (optional)</span>
               <textarea value={contact.note} onChange={update("note")} />
             </label>
+            <fieldset className="field">
+              <legend>Payment method</legend>
+              <label>
+                <input type="radio" name="paymentMethod" value="cash" checked={paymentMethod === "cash"} onChange={(event) => setPaymentMethod(event.target.value)} /> Cash on delivery
+              </label>
+              <label>
+                <input type="radio" name="paymentMethod" value="mock_card" checked={paymentMethod === "mock_card"} onChange={(event) => setPaymentMethod(event.target.value)} /> Mock card (Stripe test mode)
+              </label>
+              <p className="line-meta">Mock card payments are for testing only and do not charge a real card.</p>
+            </fieldset>
             <button className="btn block" type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Placing order..." : `Place order · ${formatPrice(total)}`}
             </button>

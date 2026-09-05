@@ -8,6 +8,7 @@ import { authRouter } from "./routes/authRoutes.js";
 import { cartRouter } from "./routes/cartRoutes.js";
 import { menuRouter } from "./routes/menuRoutes.js";
 import { orderRouter } from "./routes/orderRoutes.js";
+import { reservationRouter } from "./routes/reservationRoutes.js";
 
 export function createApp() {
   const app = express();
@@ -35,6 +36,7 @@ export function createApp() {
   app.use("/api/auth", authRouter);
   app.use("/api/cart", cartRouter);
   app.use("/api/orders", orderRouter);
+  app.use("/api/reservations", reservationRouter);
   app.use("/api", menuRouter);
 
   app.use((req, res) => res.status(404).json({ message: `Route not found: ${req.method} ${req.originalUrl}` }));

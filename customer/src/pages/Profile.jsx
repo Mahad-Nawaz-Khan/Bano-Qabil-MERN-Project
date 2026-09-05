@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
 import { authApi } from "../services/authApi.js";
 import "./Account.css";
 
 export default function Profile() {
-  const { user, isVerified, updateProfile, logoutAll } = useAuth();
+  const { user, updateProfile, logoutAll } = useAuth();
   const [name, setName] = useState(user?.name || "");
   const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "" });
   const [feedback, setFeedback] = useState({ profile: "", password: "", error: "" });
@@ -47,12 +46,6 @@ export default function Profile() {
         <p className="account-subtitle">{user?.email}</p>
 
         {feedback.error && <div className="alert error">{feedback.error}</div>}
-        {!isVerified && (
-          <div className="alert info">
-            Your email is not verified yet. <Link to="/verify-email">Verify it</Link> to place orders.
-          </div>
-        )}
-
         {feedback.profile && <div className="alert success">{feedback.profile}</div>}
         <form onSubmit={saveProfile} noValidate>
           <label className="field">

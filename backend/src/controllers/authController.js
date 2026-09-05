@@ -48,10 +48,9 @@ export const register = asyncHandler(async (req, res) => {
   if (await User.exists({ email })) throw new AppError("An account with that email already exists", 409);
   // role is never read from the request: public signup can only ever create a customer.
   const user = await User.create({ name, email, passwordHash: await hashPassword(password), role: "customer" });
-  await issueEmailVerification(user);
   respondWithSession(res, await issueSession(user, req.get("user-agent")), {
     status: 201,
-    message: "Account created. Check your email for the verification link.",
+    message: "Account created successfully.",
   });
 });
 

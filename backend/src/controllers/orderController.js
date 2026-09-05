@@ -27,6 +27,7 @@ function moveTo(order, nextStatus, role) {
 
 export const createOrder = asyncHandler(async (req, res) => {
   const idempotencyKey = req.valid["idempotency-key"];
+  const paymentMethod = req.body.paymentMethod || "cash";
   const existing = await Order.findOne({ user: req.user._id, idempotencyKey });
   if (existing) return res.status(201).json({ data: existing, message: "Order already on its way" });
 
@@ -46,6 +47,9 @@ export const createOrder = asyncHandler(async (req, res) => {
       items: orderFromLines(priced.items),
       subtotal: priced.subtotal,
       total: priced.total,
+      paymentMethod,
+      paymentStatus: paymentMethod === "mock_card" ? "paid" : "pending",
+      paymentReference: paymentMethod === "mock_card" ? `MOCK-${Date.now().toString(36).toUpperCase()}` : "",
       status: "pending",
       statusHistory: [{ status: "pending" }],
       contact: req.body.contact,

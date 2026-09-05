@@ -98,7 +98,9 @@
   margin-top: 0;
 }
 
-.reservation-page input {
+.reservation-page input,
+.reservation-page select,
+.reservation-page textarea {
   outline: none;
   border-radius: 8px;
   width: 100%;
@@ -112,10 +114,27 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
-.reservation-page input:focus {
+.reservation-page input:focus,
+.reservation-page select:focus {
   border-color: var(--hover-color);
   background: rgba(6, 26, 26, 0.9);
   box-shadow: 0 0 0 3px rgba(205, 184, 148, 0.25);
+}
+.reservation-page textarea { min-height: 90px; resize: vertical; }
+.reservation-page .policy-check { display: flex; gap: 10px; align-items: flex-start; font-size: .86rem; line-height: 1.45; }
+.reservation-page .policy-check input { width: auto; margin-top: 3px; }
+
+.reservation-page select option {
+  color: var(--ivory-text);
+  background: #082020;
+}
+
+.reservation-page .time-slot-note {
+  margin: 8px 0 0;
+  color: var(--ivory-text);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  opacity: 0.72;
 }
 
 .reservation-page .reservation-submit-btn {

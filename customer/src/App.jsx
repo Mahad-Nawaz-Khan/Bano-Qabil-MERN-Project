@@ -4,7 +4,7 @@ import { Spin } from "antd";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import CartDrawer from "./components/CartDrawer.jsx";
-import { RequireAuth, RequireVerified } from "./components/auth/RequireAuth.jsx";
+import { RequireAuth } from "./components/auth/RequireAuth.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 
 const Home = lazy(() => import("./pages/Home.jsx"));
@@ -18,6 +18,7 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword.jsx"));
 const Cart = lazy(() => import("./pages/Cart.jsx"));
 const Checkout = lazy(() => import("./pages/Checkout.jsx"));
 const Orders = lazy(() => import("./pages/Orders.jsx"));
+const Reservations = lazy(() => import("./pages/Reservations.jsx"));
 const OrderDetail = lazy(() => import("./pages/OrderDetail.jsx"));
 const Profile = lazy(() => import("./pages/Profile.jsx"));
 const NotFound = lazy(() => import("./pages/NotFound.jsx"));
@@ -42,11 +43,10 @@ export default function App() {
 
             <Route element={<RequireAuth />}>
               <Route path="/orders" element={<Orders />} />
+              <Route path="/reservations" element={<Reservations />} />
               <Route path="/orders/:id" element={<OrderDetail />} />
               <Route path="/profile" element={<Profile />} />
-              <Route element={<RequireVerified />}>
-                <Route path="/checkout" element={<Checkout />} />
-              </Route>
+              <Route path="/checkout" element={<Checkout />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

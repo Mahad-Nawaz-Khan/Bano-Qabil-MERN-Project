@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { z } from "zod";
 import { cancelOrder, createOrder, getMyOrders, getOrder, listAdminOrders, updateOrderStatus } from "../controllers/orderController.js";
-import { requireAuth, requireRole, requireVerifiedEmail } from "../middleware/auth.js";
+import { requireAuth, requireRole } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";
-import { ORDER_STATUSES } from "../models/Order.js";
+import { ORDER_STATUSES, PAYMENT_METHODS } from "../models/Order.js";
 
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Contact name is required").max(80, "Contact name is too long"),
@@ -12,7 +12,7 @@ const contactSchema = z.object({
   note: z.string().trim().max(300, "Note is too long").optional().default(""),
 });
 
-const checkoutSchema = z.object({ contact: contactSchema });
+const checkoutSchema = z.object({ contact: contactSchema, paymentMethod: z.enum(PAYMENT_METHODS).default("cash") });
 // Non-string (absent) headers get the same guidance as malformed ones.
 const idempotencyKeySchema = z.object({
   "idempotency-key": z.string({ error: "Send a valid Idempotency-Key" }).uuid("Send a valid Idempotency-Key"),
@@ -31,7 +31,7 @@ orderRouter.use(requireAuth);
 orderRouter.get("/admin/all", requireRole("admin"), validate(listQuerySchema, "query"), listAdminOrders);
 orderRouter.patch("/:id/status", requireRole("admin"), validate(statusSchema), updateOrderStatus);
 
-orderRouter.post("/", requireVerifiedEmail, validate(checkoutSchema), validate(idempotencyKeySchema, "headers"), createOrder);
+orderRouter.post("/", validate(checkoutSchema), validate(idempotencyKeySchema, "headers"), createOrder);
 orderRouter.get("/", getMyOrders);
 orderRouter.post("/:id/cancel", cancelOrder);
 orderRouter.get("/:id", getOrder);
