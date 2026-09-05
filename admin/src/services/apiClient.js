@@ -19,15 +19,16 @@ export const getAccessToken = () => accessToken;
 export const onSessionEnded = (handler) => { sessionEndedHandler = handler; };
 
 async function send(path, { body, headers, ...options } = {}, token = accessToken) {
+  const isFormData = body instanceof FormData;
   const response = await fetch(`${API_BASE}${path}`, {
     ...options,
     credentials: "include",
     headers: {
-      ...(body === undefined ? {} : { "Content-Type": "application/json" }),
+      ...(body === undefined || isFormData ? {} : { "Content-Type": "application/json" }),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
-    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    ...(body === undefined ? {} : { body: isFormData ? body : JSON.stringify(body) }),
   });
 
   if (response.status === 204) return { response, data: {} };

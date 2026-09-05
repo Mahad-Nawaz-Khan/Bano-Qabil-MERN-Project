@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
 import { authApi } from "../services/authApi.js";
@@ -13,6 +13,7 @@ export default function VerifyEmail() {
   const { isAuthenticated, isVerified, refreshUser } = useAuth();
   const [status, setStatus] = useState("idle");
   const [message, setMessage] = useState("");
+  const verificationStarted = useRef(false);
 
   async function handleVerify() {
     if (!token) return;
@@ -33,6 +34,12 @@ export default function VerifyEmail() {
       setMessage(error.message);
     }
   }
+
+  useEffect(() => {
+    if (!token || isVerified || verificationStarted.current) return;
+    verificationStarted.current = true;
+    handleVerify();
+  }, [token, isVerified]);
 
   async function resend() {
     setStatus("sending");

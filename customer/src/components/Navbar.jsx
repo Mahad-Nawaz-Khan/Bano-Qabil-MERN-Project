@@ -82,6 +82,7 @@ export default function Navbar() {
                 {accountOpen && (
                   <ul className="account-dropdown">
                     <li><NavLink to="/orders" onClick={closeMenus}>My Orders</NavLink></li>
+                    <li><NavLink to="/reservations" onClick={closeMenus}>My Reservations</NavLink></li>
                     <li><NavLink to="/profile" onClick={closeMenus}>Profile</NavLink></li>
                     <li><button type="button" onClick={handleLogout}>Sign out</button></li>
                   </ul>

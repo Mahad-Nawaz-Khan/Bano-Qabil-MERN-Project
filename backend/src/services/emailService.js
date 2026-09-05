@@ -87,6 +87,15 @@ export function sendOrderConfirmationEmail(user, order) {
   });
 }
 
+export function sendReservationConfirmationEmail(reservation) {
+  const status = reservation.status || "pending";
+  const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+  const isPending = status === "pending";
+  const heading = isPending ? "Reservation received" : `Reservation ${statusLabel}`;
+  const message = isPending ? "We will confirm it shortly." : `Your reservation is now ${statusLabel.toLowerCase()}.`;
+  return send({ to: reservation.email, subject: `Reservation ${reservation.reservationNumber} ${isPending ? "received" : status}`, text: `Reservation ${reservation.reservationNumber}: ${reservation.date} at ${reservation.time} for ${reservation.partySize} guests. Status: ${statusLabel}. ${message}`, html: layout(heading, `Hi ${reservation.name},<br><br>Your reservation is for <strong>${reservation.date}</strong> at <strong>${reservation.time}</strong> for <strong>${reservation.partySize}</strong> guests. Your reference is <strong>${reservation.reservationNumber}</strong>.<br><br>${message}`, { href: appUrl(), label: "Visit GHALIB" }) });
+}
+
 export function sendOrderStatusUpdateEmail(user, order) {
   // Do not send email notification for 'preparing' ("Being Prepared in the Kitchen")
   if (order.status === "preparing") {

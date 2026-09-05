@@ -17,6 +17,7 @@ export default function AdminLayout() {
           <a href="/" className="brand">GHALIB <span>ADMIN</span></a>
           <NavLink to="/" end className={({ isActive }) => (isActive ? "admin-nav-link active" : "admin-nav-link")}>Menu</NavLink>
           <NavLink to="/orders" className={({ isActive }) => (isActive ? "admin-nav-link active" : "admin-nav-link")}>Orders</NavLink>
+          <NavLink to="/reservations" className={({ isActive }) => (isActive ? "admin-nav-link active" : "admin-nav-link")}>Reservations</NavLink>
         </div>
         <div className="admin-nav">
           <Text className="admin-user">{user?.name}</Text>

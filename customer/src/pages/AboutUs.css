@@ -1,5 +1,19 @@
 /* Luxury fine-dining aesthetic for About Us page */
 
+@keyframes hero-enter {
+  from { opacity: 0; transform: translateY(26px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes line-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes cursor-blink {
+  50% { opacity: 0; }
+}
+
 .about-hero {
   display: flex;
   justify-content: center;
@@ -44,6 +58,7 @@
   border: none;
   background: linear-gradient(90deg, transparent, var(--hover-color), transparent);
   margin: 24px auto 34px;
+  animation: line-grow 0.8s 0.35s ease-out both;
 }
 
 .about-text p {
@@ -57,6 +72,16 @@
 
 .about-text p:last-child {
   margin-bottom: 0;
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 3px;
+  vertical-align: -0.16em;
+  background: var(--hover-color);
+  animation: cursor-blink 0.8s step-end infinite;
 }
 
 .values {
@@ -102,6 +127,52 @@
   opacity: 0.88;
 }
 
+.hero-reveal {
+  animation: hero-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.location-section {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 56px) 80px;
+}
+
+.location-heading {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.location-heading p {
+  margin: 0 0 7px;
+  color: var(--hover-color);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.location-heading h2 {
+  margin: 0;
+  color: var(--ivory-text);
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+  font-weight: 500;
+}
+
+.map-frame {
+  overflow: hidden;
+  border: 1px solid var(--gold-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-luxury);
+}
+
+.map-frame iframe {
+  display: block;
+  width: 100%;
+  height: 420px;
+  border: 0;
+}
+
 @media (max-width: 900px) and (min-width: 601px) {
   .values {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -120,5 +191,56 @@
   }
   .about-text {
     padding: 32px 20px;
+  }
+
+  .map-frame iframe {
+    height: 320px;
+  }
+}
+
+/* Scroll reveals and interactive finishing touches */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.65s ease var(--reveal-delay, 0ms), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.value-card {
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease;
+}
+
+.value-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--hover-color);
+  background-color: rgba(205, 184, 148, 0.08);
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.5), 0 0 24px rgba(205, 184, 148, 0.2);
+}
+
+.map-frame {
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.map-frame:hover {
+  transform: translateY(-5px);
+  border-color: var(--hover-color);
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.5), 0 0 24px rgba(205, 184, 148, 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
 }

@@ -8,6 +8,7 @@ import { authRouter } from "./routes/authRoutes.js";
 import { cartRouter } from "./routes/cartRoutes.js";
 import { menuRouter } from "./routes/menuRoutes.js";
 import { orderRouter } from "./routes/orderRoutes.js";
+import { reservationRouter } from "./routes/reservationRoutes.js";
 
 export function createApp() {
   const app = express();
@@ -35,12 +36,14 @@ export function createApp() {
   app.use("/api/auth", authRouter);
   app.use("/api/cart", cartRouter);
   app.use("/api/orders", orderRouter);
+  app.use("/api/reservations", reservationRouter);
   app.use("/api", menuRouter);
 
   app.use((req, res) => res.status(404).json({ message: `Route not found: ${req.method} ${req.originalUrl}` }));
   app.use((error, _req, res, next) => {
     if (res.headersSent) return next(error);
     if (!error.status || error.status >= 500) console.error(error);
+    if (error.name === "MulterError") return res.status(400).json({ message: error.message });
     if (error.name === "ValidationError") return res.status(400).json({ message: error.message });
     // `retryable` lets the client decide to replay the request without matching on copy.
     if (error.name === "VersionError") return res.status(409).json({ message: "That record was modified in another tab. Please try again.", retryable: true });

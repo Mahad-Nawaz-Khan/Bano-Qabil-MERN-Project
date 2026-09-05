@@ -2,6 +2,8 @@ import crypto from "node:crypto";
 import mongoose from "mongoose";
 
 export const ORDER_STATUSES = ["pending", "confirmed", "preparing", "ready", "completed", "cancelled"];
+export const PAYMENT_METHODS = ["cash", "mock_card"];
+export const PAYMENT_STATUSES = ["pending", "paid"];
 
 // The only moves an admin may make. Anything outside this table is rejected.
 export const ADMIN_TRANSITIONS = {
@@ -35,6 +37,9 @@ const orderSchema = new mongoose.Schema({
   items: { type: [orderItemSchema], validate: [(items) => items.length > 0, "An order needs at least one item"] },
   subtotal: { type: Number, required: true, min: 0 },
   total: { type: Number, required: true, min: 0 },
+  paymentMethod: { type: String, enum: PAYMENT_METHODS, required: true, default: "cash" },
+  paymentStatus: { type: String, enum: PAYMENT_STATUSES, required: true, default: "pending" },
+  paymentReference: { type: String, default: "" },
   status: { type: String, enum: ORDER_STATUSES, default: "pending", index: true },
   statusHistory: {
     type: [new mongoose.Schema({ status: { type: String, enum: ORDER_STATUSES }, at: { type: Date, default: Date.now } }, { _id: false })],

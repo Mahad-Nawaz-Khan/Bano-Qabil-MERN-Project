@@ -9,6 +9,7 @@ import AdminLayout from "./pages/AdminLayout.jsx";
 import AdminLogin from "./pages/AdminLogin.jsx";
 import AdminOrders from "./pages/AdminOrders.jsx";
 import MenuAdmin from "./pages/MenuAdmin.jsx";
+import AdminReservations from "./pages/AdminReservations.jsx";
 import "./index.css";
 
 const adminTheme = {
@@ -94,6 +95,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 <Route element={<AdminLayout />}>
                   <Route index element={<MenuAdmin />} />
                   <Route path="orders" element={<AdminOrders />} />
+                  <Route path="reservations" element={<AdminReservations />} />
                 </Route>
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />
