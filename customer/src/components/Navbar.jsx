@@ -58,6 +58,10 @@ export default function Navbar() {
           ))}
 
           <li>
+            <a href="/#con" onClick={closeMenus}>CONTACT US</a>
+          </li>
+
+          <li>
             <button
               type="button"
               className="nav-icon-btn"
