@@ -96,7 +96,15 @@ export default function AboutUs() {
           <p>Find Us</p>
           <h2 id="location-heading">Visit GHALIB Restaurant</h2>
         </div>
-       
+        <div className="map-frame">
+          <iframe
+            title="Map showing GHALIB Restaurant in Karachi, Pakistan"
+            src="https://www.google.com/maps?q=24.8655992%2C67.0770678&z=17&output=embed"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+          />
+        </div>
       </section>
     </>
   );
