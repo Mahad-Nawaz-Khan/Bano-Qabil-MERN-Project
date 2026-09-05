@@ -10,6 +10,7 @@ const formatPrice = (value) =>
 
 export default function Card({ item, onOrder, revealSide, revealDelay = 0 }) {
   const { addItem } = useCart();
+  const cardRef = useRef(null);
   const [isAdding, setIsAdding] = useState(false);
   const [added, setAdded] = useState(false);
   const [error, setError] = useState("");
@@ -19,6 +20,18 @@ export default function Card({ item, onOrder, revealSide, revealDelay = 0 }) {
   // Cards remount when the API menu replaces the bundled one, so the
   // confirmation timer has to be cancelled on the way out.
   useEffect(() => () => clearTimeout(addedTimer.current), []);
+
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return undefined;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      card.classList.toggle("is-visible", entry.isIntersecting);
+    }, { threshold: 0.15 });
+
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, []);
 
   // addItem throws for items without an _id, which is every item in the
   // offline fallback menu — offer the shortcut only when it can succeed.
@@ -43,6 +56,7 @@ export default function Card({ item, onOrder, revealSide, revealDelay = 0 }) {
 
   return (
     <div
+      ref={cardRef}
       className={`product-card card-reveal-${revealSide || "left"}`}
       style={{ "--card-reveal-delay": `${Math.min(revealDelay, 5) * 80}ms` }}
     >
