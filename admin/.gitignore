@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+
+# IDE / editor
+.claude
+.zcode
+.vscode
