@@ -1,0 +1,88 @@
+:root {
+  --primary-color: #0b2c2d;
+  --secondary-color: #ffffff;
+  --hover-color: #cdb894;
+  --pattern-green: #1e2921;
+  /* Shared luxury fine-dining design tokens */
+  --glass-bg: rgba(6, 26, 26, 0.88);
+  --glass-bg-subtle: rgba(4, 20, 20, 0.65);
+  --glass-bg-card: rgba(8, 28, 28, 0.94);
+  --gold-border: rgba(205, 184, 148, 0.22);
+  --gold-border-bright: rgba(205, 184, 148, 0.45);
+  --ivory-text: #f7edd8;
+  --muted-sand: #b8aba0;
+  --shadow-luxury: 0 16px 40px rgba(0, 0, 0, 0.45);
+  --lattice-image: url("/images/backgroundimage.jpeg");
+  --lattice-size: 1920px auto;
+  /* Vertical space reserved for the fixed navbar: 84px bar + 6px air.
+     The hero cancels this with a negative margin, so edit both together. */
+  --navbar-h: 90px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Times New Roman", Times, serif;
+  background-color: var(--primary-color);
+  background-image: var(--lattice-image);
+  background-repeat: repeat;
+  background-position: top center;
+  background-attachment: scroll;
+  background-size: var(--lattice-size);
+  overflow-x: hidden;
+}
+
+.ant-app .public-app {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.app-main {
+  min-height: 100vh;
+  padding-top: var(--navbar-h);
+}
+
+.page-loader {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* Visible to screen readers only. Lives here rather than in a page stylesheet
+   because Card.jsx uses it and only imports Card.css. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
