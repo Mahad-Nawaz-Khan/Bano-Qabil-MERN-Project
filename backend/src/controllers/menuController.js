@@ -1,6 +1,7 @@
 import { Category } from "../models/Category.js";
 import { MenuItem } from "../models/MenuItem.js";
 import { AppError, asyncHandler, requireId } from "../utils/errors.js";
+import { uploadMenuImage } from "../services/cloudinaryService.js";
 
 export const getPublicMenu = asyncHandler(async (_req, res) => {
   const categories = await Category.find().sort({ sortOrder: 1, name: 1 }).lean();
@@ -47,6 +48,14 @@ export const createItem = asyncHandler(async (req, res) => {
   const item = await MenuItem.create(req.body);
   await item.populate("category", "name slug");
   res.status(201).json({ message: "Menu item created", data: item });
+});
+export const uploadItemImage = asyncHandler(async (req, res) => {
+  if (!req.file) throw new AppError("Choose an image to upload", 400);
+  const uploaded = await uploadMenuImage(req.file.buffer, { filename: req.file.originalname });
+  res.status(201).json({
+    message: "Image uploaded to Cloudinary",
+    data: { url: uploaded.secure_url, publicId: uploaded.public_id, width: uploaded.width, height: uploaded.height },
+  });
 });
 export const updateItem = asyncHandler(async (req, res) => {
   requireId(req.params.id);

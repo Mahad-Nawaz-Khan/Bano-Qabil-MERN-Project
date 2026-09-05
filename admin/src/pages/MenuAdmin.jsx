@@ -40,6 +40,7 @@ export default function MenuAdmin() {
   const [itemModal, setItemModal] = useState({ open: false, item: null });
   const [categoryModal, setCategoryModal] = useState({ open: false, category: null });
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [itemForm] = Form.useForm();
   const [categoryForm] = Form.useForm();
 
@@ -87,6 +88,22 @@ export default function MenuAdmin() {
     } finally { setSaving(false); }
   };
 
+  const uploadImage = async (event) => {
+    const [file] = event.target.files;
+    if (!file) return;
+    setUploadingImage(true);
+    try {
+      const response = await menuApi.uploadImage(file);
+      itemForm.setFieldValue("image", response.data.url);
+      message.success("Image uploaded to Cloudinary");
+    } catch (error) {
+      message.error(getError(error));
+    } finally {
+      setUploadingImage(false);
+      event.target.value = "";
+    }
+  };
+
   const saveCategory = async (values) => {
     setSaving(true);
     try {
@@ -130,7 +147,11 @@ export default function MenuAdmin() {
           <Form.Item name="name" label="Dish name" rules={[{ required: true, message: "Dish name is required" }]}><Input placeholder="e.g. Chicken Mandi" /></Form.Item>
           <Row gutter={12}><Col span={12}><Form.Item name="category" label="Category" rules={[{ required: true, message: "Choose a category" }]}><Select placeholder="Choose category" options={categories.map((category) => ({ label: category.name, value: category._id }))} /></Form.Item></Col><Col span={12}><Form.Item name="price" label="Price (Rs)" rules={[{ required: true, message: "Price is required" }]}><InputNumber min={0} precision={0} step={1} className="full-width" /></Form.Item></Col></Row>
           <Form.Item name="description" label="Description"><Input.TextArea rows={3} placeholder="Short dish description" /></Form.Item>
-          <Form.Item name="image" label="Image URL"><Input placeholder="https://…" /></Form.Item>
+          <Form.Item name="image" label="Image URL"><Input placeholder="Cloudinary URL appears here after upload" /></Form.Item>
+          <Form.Item label="Upload image to Cloudinary" extra="JPG, PNG, or WebP; maximum 5 MB.">
+            <input type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadImage} disabled={uploadingImage} />
+            {uploadingImage && <Text type="secondary"> Uploading image…</Text>}
+          </Form.Item>
           <Form.Item name="isAvailable" label="Visible on menu" valuePropName="checked"><Switch checkedChildren="Visible" unCheckedChildren="Hidden" /></Form.Item>
           <div className="modal-actions"><Button onClick={() => setItemModal({ open: false, item: null })}>Cancel</Button><Button type="primary" htmlType="submit" loading={saving}>Save item</Button></div>
         </Form>

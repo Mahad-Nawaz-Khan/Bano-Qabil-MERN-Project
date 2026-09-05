@@ -41,6 +41,7 @@ export function createApp() {
   app.use((error, _req, res, next) => {
     if (res.headersSent) return next(error);
     if (!error.status || error.status >= 500) console.error(error);
+    if (error.name === "MulterError") return res.status(400).json({ message: error.message });
     if (error.name === "ValidationError") return res.status(400).json({ message: error.message });
     // `retryable` lets the client decide to replay the request without matching on copy.
     if (error.name === "VersionError") return res.status(409).json({ message: "That record was modified in another tab. Please try again.", retryable: true });
