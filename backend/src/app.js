@@ -1,6 +1,7 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
+import mongoose from "mongoose";
 import { globalLimiter } from "./middleware/rateLimit.js";
 import { getAllowedOrigins, requireSameOrigin, securityHeaders } from "./middleware/security.js";
 import { assetRouter } from "./routes/assetRoutes.js";
@@ -31,7 +32,11 @@ export function createApp() {
   app.use(globalLimiter);
   app.use(requireSameOrigin);
 
-  app.get("/api/health", (_req, res) => res.json({ ok: true }));
+  app.get("/api/health", (_req, res) => {
+    const dbState = mongoose.connection.readyState; // 0=disconnected, 1=connected, 2=connecting, 3=disconnecting
+    const ok = dbState === 1;
+    res.status(ok ? 200 : 503).json({ ok, db: ok ? "connected" : "unavailable" });
+  });
   app.use("/api/assets", assetRouter);
   app.use("/api/auth", authRouter);
   app.use("/api/cart", cartRouter);
