@@ -2,6 +2,9 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import { createApp } from "./app.js";
 import { connectDatabase } from "./config/db.js";
+import { validateEnv } from "./config/validateEnv.js";
+
+validateEnv();
 
 const port = Number(process.env.PORT || 5000);
 

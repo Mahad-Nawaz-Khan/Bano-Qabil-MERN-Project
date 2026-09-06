@@ -1,4 +1,4 @@
-import { Reservation } from "../models/Reservation.js";
+import { Reservation, RESERVATION_TRANSITIONS } from "../models/Reservation.js";
 import { sendReservationConfirmationEmail } from "../services/emailService.js";
 import { AppError, asyncHandler, requireId } from "../utils/errors.js";
 
@@ -38,8 +38,15 @@ export const cancelReservation = asyncHandler(async (req, res) => {
 export const listAdminReservations = asyncHandler(async (_req, res) => res.json({ data: await Reservation.find().populate("user", "name email").sort({ date: -1, time: -1 }) }));
 export const updateReservationStatus = asyncHandler(async (req, res) => {
   requireId(req.params.id);
-  const reservation = await Reservation.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true, runValidators: true });
+  const reservation = await Reservation.findById(req.params.id);
   if (!reservation) throw new AppError("Reservation not found", 404);
+  const nextStatus = req.body.status;
+  const allowed = RESERVATION_TRANSITIONS[reservation.status] ?? [];
+  if (!allowed.includes(nextStatus)) {
+    throw new AppError(`A reservation that is ${reservation.status} cannot be marked as ${nextStatus}`, 409);
+  }
+  reservation.status = nextStatus;
+  await reservation.save();
   if (["confirmed", "cancelled"].includes(reservation.status)) {
     sendReservationConfirmationEmail(reservation).catch((error) => console.error("[email] reservation status notification failed:", error.message));
   }

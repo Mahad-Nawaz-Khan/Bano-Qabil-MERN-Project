@@ -2,6 +2,14 @@ import mongoose from "mongoose";
 
 export const RESERVATION_STATUSES = ["pending", "confirmed", "cancelled", "completed"];
 
+// Only valid admin moves. Anything outside this table is rejected.
+export const RESERVATION_TRANSITIONS = {
+  pending: ["confirmed", "cancelled"],
+  confirmed: ["completed", "cancelled"],
+  completed: [],
+  cancelled: [],
+};
+
 const reservationSchema = new mongoose.Schema({
   reservationNumber: { type: String, required: true, unique: true, index: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },

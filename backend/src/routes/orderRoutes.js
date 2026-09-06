@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { cancelOrder, createOrder, getMyOrders, getOrder, listAdminOrders, updateOrderStatus } from "../controllers/orderController.js";
-import { requireAuth, requireRole } from "../middleware/auth.js";
+import { requireAuth, requireRole, requireVerifiedEmail } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";
 import { ORDER_STATUSES, PAYMENT_METHODS } from "../models/Order.js";
 
@@ -31,7 +31,7 @@ orderRouter.use(requireAuth);
 orderRouter.get("/admin/all", requireRole("admin"), validate(listQuerySchema, "query"), listAdminOrders);
 orderRouter.patch("/:id/status", requireRole("admin"), validate(statusSchema), updateOrderStatus);
 
-orderRouter.post("/", validate(checkoutSchema), validate(idempotencyKeySchema, "headers"), createOrder);
+orderRouter.post("/", requireVerifiedEmail, validate(checkoutSchema), validate(idempotencyKeySchema, "headers"), createOrder);
 orderRouter.get("/", getMyOrders);
 orderRouter.post("/:id/cancel", cancelOrder);
 orderRouter.get("/:id", getOrder);
