@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { App as AntApp, ConfigProvider, theme } from "antd";
 import "antd/dist/reset.css";
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -81,13 +81,12 @@ const adminTheme = {
   },
 };
 
-// Hash routing: admin.html is served as a static file with no rewrite rules, so a
-// refresh on /orders would 404 under BrowserRouter.
+// BrowserRouter: clean URLs (/login, /orders, /reservations). SPA rewrites configured in vercel.json.
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ConfigProvider theme={adminTheme}>
       <AntApp>
-        <HashRouter>
+        <BrowserRouter>
           <AuthProvider>
             <Routes>
               <Route path="/login" element={<AdminLogin />} />
@@ -101,7 +100,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </AuthProvider>
-        </HashRouter>
+        </BrowserRouter>
       </AntApp>
     </ConfigProvider>
   </React.StrictMode>,
