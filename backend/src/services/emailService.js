@@ -56,7 +56,7 @@ async function send({ to, subject, text, html }) {
 }
 
 export function sendVerificationEmail(user, token, next) {
-  const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? `&next=${encodeURIComponent(next)}` : "";
+  const safeNext = next?.startsWith("/") && !next.startsWith("//") ? `&next=${encodeURIComponent(next)}` : "";
   const href = `${appUrl()}/verify-email?token=${token}${safeNext}`;
   return send({
     to: user.email,
@@ -79,11 +79,18 @@ export function sendPasswordResetEmail(user, token) {
 export function sendOrderConfirmationEmail(user, order) {
   const href = `${appUrl()}/orders/${order._id}`;
   const lines = order.items.map((item) => `${item.quantity} x ${item.name} - Rs ${item.lineTotal}`).join("\n");
+  const htmlLines = order.items
+    .map((item) => `${item.quantity} &times; ${item.name} &mdash; Rs ${item.lineTotal}`)
+    .join("<br>");
   return send({
     to: user.email,
     subject: `Order ${order.orderNumber} received`,
     text: `We received your order ${order.orderNumber}.\n\n${lines}\n\nTotal: Rs ${order.total}\n\nTrack it here: ${href}`,
-    html: layout(`Order ${order.orderNumber} received`, `Thanks ${user.name}! We are preparing your order.<br><br>${order.items.map((item) => `${item.quantity} &times; ${item.name} &mdash; Rs ${item.lineTotal}`).join("<br>")}<br><br><strong>Total: Rs ${order.total}</strong>`, { href, label: "Track order" }),
+    html: layout(
+      `Order ${order.orderNumber} received`,
+      `Thanks ${user.name}! We are preparing your order.<br><br>${htmlLines}<br><br><strong>Total: Rs ${order.total}</strong>`,
+      { href, label: "Track order" },
+    ),
   });
 }
 

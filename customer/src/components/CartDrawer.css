@@ -3,6 +3,10 @@
 .drawer-backdrop {
   position: fixed;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
   background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
@@ -21,8 +25,15 @@
   position: fixed;
   top: 0;
   right: 0;
+  left: auto;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
   height: 100%;
   width: min(440px, 100%);
+  max-width: none;
+  max-height: none;
   background: var(--glass-bg-card);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);

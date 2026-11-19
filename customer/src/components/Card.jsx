@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
 import { useCart } from "../hooks/useCart.js";
 import "./Card.css";
 
@@ -94,9 +95,22 @@ export default function Card({ item, onOrder, revealSide, revealDelay = 0 }) {
         </button>
       </div>
 
-      <span className="sr-only" role="status" aria-live="polite">
+      <output className="sr-only" aria-live="polite">
         {added ? `${item.name} added to cart` : ""}
-      </span>
+      </output>
     </div>
   );
 }
+
+Card.propTypes = {
+  item: PropTypes.shape({
+    _id: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    img: PropTypes.string,
+    image: PropTypes.string,
+  }).isRequired,
+  onOrder: PropTypes.func.isRequired,
+  revealSide: PropTypes.string,
+  revealDelay: PropTypes.number,
+};

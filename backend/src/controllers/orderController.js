@@ -15,9 +15,12 @@ const orderFromLines = (lines) => lines.map((line) => ({
 
 // Customers may only cancel, and only early; admins follow the transition table.
 function moveTo(order, nextStatus, role) {
-  const allowed = role === "admin"
-    ? ADMIN_TRANSITIONS[order.status] ?? []
-    : CUSTOMER_CANCELLABLE.includes(order.status) ? ["cancelled"] : [];
+  let allowed = [];
+  if (role === "admin") {
+    allowed = ADMIN_TRANSITIONS[order.status] ?? [];
+  } else if (CUSTOMER_CANCELLABLE.includes(order.status)) {
+    allowed = ["cancelled"];
+  }
   if (!allowed.includes(nextStatus)) {
     throw new AppError(`An order that is ${order.status} cannot be marked as ${nextStatus}`, 409);
   }

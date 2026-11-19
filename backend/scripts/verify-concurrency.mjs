@@ -110,7 +110,7 @@ await check("Concurrent refresh: winner keeps the session and only the loser fai
     if (doc.tokenHash !== filter.tokenHash) return null;
     if (doc.revokedAt !== null) return null;
     if (doc.pending === true) return null;
-    if (!(doc.expiresAt > filter.expiresAt.$gt)) return null;
+    if (doc.expiresAt <= filter.expiresAt.$gt) return null;
     Object.assign(doc, update.$set);
     return doc;
   };

@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { Spin } from "antd";
 import { useAuth } from "../../hooks/useAuth.js";
@@ -40,3 +41,7 @@ export function RequireAdmin({ loginPath = "/login" }) {
   }
   return <Outlet />;
 }
+
+RequireAdmin.propTypes = {
+  loginPath: PropTypes.string,
+};

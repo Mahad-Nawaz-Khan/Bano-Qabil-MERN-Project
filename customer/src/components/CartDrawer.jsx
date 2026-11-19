@@ -20,11 +20,18 @@ export default function CartDrawer() {
 
   return (
     <>
-      <div className={`drawer-backdrop ${isOpen ? "open" : ""}`} onClick={closeCart} />
-      <aside
+      <button
+        type="button"
+        className={`drawer-backdrop ${isOpen ? "open" : ""}`}
+        onClick={closeCart}
+        aria-label="Close cart"
+        tabIndex={-1}
+        aria-hidden={!isOpen}
+      />
+      <dialog
         ref={drawerRef}
+        open={isOpen}
         className={`cart-drawer ${isOpen ? "open" : ""}`}
-        role="dialog"
         aria-modal="true"
         aria-labelledby="cart-drawer-title"
         aria-hidden={!isOpen}
@@ -65,7 +72,7 @@ export default function CartDrawer() {
             <Link className="btn ghost block" to="/cart" onClick={closeCart}>View full cart</Link>
           </footer>
         )}
-      </aside>
+      </dialog>
     </>
   );
 }

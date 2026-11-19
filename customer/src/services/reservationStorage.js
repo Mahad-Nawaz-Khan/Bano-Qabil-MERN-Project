@@ -42,6 +42,7 @@ export function getReservations(storage = null, key = "reservations") {
 
     return [];
   } catch (error) {
+    console.warn("[reservations] Failed to read reservations from storage:", error);
     return [];
   }
 }

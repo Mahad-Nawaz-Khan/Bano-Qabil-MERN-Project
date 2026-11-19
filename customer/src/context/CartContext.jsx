@@ -1,4 +1,5 @@
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import PropTypes from "prop-types";
 import { useAuth } from "../hooks/useAuth.js";
 import { cartApi } from "../services/cartApi.js";
 import { MAX_ITEM_QUANTITY, guestCart, summarise } from "../services/guestCart.js";
@@ -13,6 +14,18 @@ const toLine = (item) => {
   if (!menuItem) throw new Error("This dish is not available for ordering right now.");
   return { menuItem, name: item.name, image: item.img || item.image || "", unitPrice: Number(item.price) || 0 };
 };
+
+async function executeWithConflictRetry(task) {
+  try {
+    return await task();
+  } catch (taskError) {
+    if (taskError.status !== 409 || !taskError.retryable) {
+      throw taskError;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return task();
+  }
+}
 
 export function CartProvider({ children }) {
   const { user, isInitializing } = useAuth();
@@ -105,20 +118,9 @@ export function CartProvider({ children }) {
     setIsLoading(true);
     setError("");
     try {
-      const data = await task();
+      const data = await executeWithConflictRetry(task);
       if (activeUserId.current === sessionUserId) setCart(data);
     } catch (taskError) {
-      if (taskError.status === 409 && taskError.retryable) {
-        try {
-          await new Promise((resolve) => setTimeout(resolve, 100));
-          const retried = await task();
-          if (activeUserId.current === sessionUserId) setCart(retried);
-          return;
-        } catch (retryError) {
-          if (activeUserId.current === sessionUserId) setError(retryError.message);
-          throw retryError;
-        }
-      }
       if (activeUserId.current === sessionUserId) setError(taskError.message);
       throw taskError;
     } finally {
@@ -190,3 +192,7 @@ export function CartProvider({ children }) {
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
+
+CartProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

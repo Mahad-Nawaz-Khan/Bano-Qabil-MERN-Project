@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { Alert, App, Button, Card, Descriptions, Popconfirm, Select, Space, Table, Tag, Typography } from "antd";
 import { orderApi } from "../services/orderApi.js";
 import { formatDate, formatPrice } from "../utils/format.js";
@@ -29,6 +30,54 @@ const STATUS_OPTIONS = [
   { label: "All orders", value: "" },
   ...Object.keys(NEXT_STATUSES).map((status) => ({ label: status[0].toUpperCase() + status.slice(1), value: status })),
 ];
+
+function getActionCopy(order, target) {
+  if (target !== "cancelled") {
+    return {
+      label: `Mark ${target}`,
+      confirmTitle: `Mark ${order.orderNumber} as ${target}?`,
+    };
+  }
+  const verb = order.status === "pending" ? "Reject" : "Cancel";
+  return {
+    label: verb,
+    confirmTitle: `${verb} order ${order.orderNumber}?`,
+  };
+}
+
+function OrderExpandedRow({ order }) {
+  return (
+    <Descriptions size="small" column={1} bordered>
+      <Descriptions.Item label="Items">
+        {order.items.map((item) => `${item.quantity} × ${item.name} (${formatPrice(item.lineTotal)})`).join(", ")}
+      </Descriptions.Item>
+      <Descriptions.Item label="Phone">{order.contact?.phone}</Descriptions.Item>
+      <Descriptions.Item label="Address">{order.contact?.address}</Descriptions.Item>
+      {order.contact?.note ? <Descriptions.Item label="Note">{order.contact.note}</Descriptions.Item> : null}
+    </Descriptions>
+  );
+}
+
+OrderExpandedRow.propTypes = {
+  order: PropTypes.shape({
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        quantity: PropTypes.number,
+        name: PropTypes.string,
+        lineTotal: PropTypes.number,
+      }),
+    ).isRequired,
+    contact: PropTypes.shape({
+      phone: PropTypes.string,
+      address: PropTypes.string,
+      note: PropTypes.string,
+    }),
+  }).isRequired,
+};
+
+const EXPANDABLE_CONFIG = {
+  expandedRowRender: (order) => <OrderExpandedRow order={order} />,
+};
 
 export default function AdminOrders() {
   const { message } = App.useApp();
@@ -86,16 +135,7 @@ export default function AdminOrders() {
           <Space>
             {next.map((target) => {
               const isRejectOrCancel = target === "cancelled";
-              const label = isRejectOrCancel
-                ? order.status === "pending"
-                  ? "Reject"
-                  : "Cancel"
-                : `Mark ${target}`;
-              const confirmTitle = isRejectOrCancel
-                ? order.status === "pending"
-                  ? `Reject order ${order.orderNumber}?`
-                  : `Cancel order ${order.orderNumber}?`
-                : `Mark ${order.orderNumber} as ${target}?`;
+              const { label, confirmTitle } = getActionCopy(order, target);
 
               return (
                 <Popconfirm key={target} title={confirmTitle} onConfirm={() => changeStatus(order, target)}>
@@ -135,18 +175,7 @@ export default function AdminOrders() {
           dataSource={orders}
           scroll={{ x: 900 }}
           pagination={{ current: meta.page, pageSize: meta.limit, total: meta.total, showSizeChanger: false, onChange: setPage }}
-          expandable={{
-            expandedRowRender: (order) => (
-              <Descriptions size="small" column={1} bordered>
-                <Descriptions.Item label="Items">
-                  {order.items.map((item) => `${item.quantity} × ${item.name} (${formatPrice(item.lineTotal)})`).join(", ")}
-                </Descriptions.Item>
-                <Descriptions.Item label="Phone">{order.contact?.phone}</Descriptions.Item>
-                <Descriptions.Item label="Address">{order.contact?.address}</Descriptions.Item>
-                {order.contact?.note ? <Descriptions.Item label="Note">{order.contact.note}</Descriptions.Item> : null}
-              </Descriptions>
-            ),
-          }}
+          expandable={EXPANDABLE_CONFIG}
         />
       </Card>
     </>

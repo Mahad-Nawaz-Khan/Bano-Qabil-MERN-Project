@@ -63,11 +63,9 @@ export function useModalDialog({ isOpen, dialogRef, initialFocusRef, onRequestCl
             event.preventDefault();
             last.focus();
           }
-        } else {
-          if (document.activeElement === last || !dialogRef.current.contains(document.activeElement)) {
-            event.preventDefault();
-            first.focus();
-          }
+        } else if (document.activeElement === last || !dialogRef.current.contains(document.activeElement)) {
+          event.preventDefault();
+          first.focus();
         }
       }
     };

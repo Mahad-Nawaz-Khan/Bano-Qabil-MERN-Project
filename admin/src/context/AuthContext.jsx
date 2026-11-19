@@ -1,4 +1,5 @@
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import PropTypes from "prop-types";
 import { authApi } from "../services/authApi.js";
 import { bootstrapSession, onSessionEnded, setAccessToken } from "../services/apiClient.js";
 
@@ -79,3 +80,7 @@ export function AuthProvider({ children }) {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Card from "../components/Card.jsx";
 import OrderPopup from "../components/OrderPopup.jsx";
@@ -67,6 +68,25 @@ function MenuSection({ section, onOrder }) {
   );
 }
 
+MenuSection.propTypes = {
+  section: PropTypes.shape({
+    slug: PropTypes.string,
+    category: PropTypes.string.isRequired,
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        _id: PropTypes.string,
+        name: PropTypes.string.isRequired,
+        price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        img: PropTypes.string,
+        image: PropTypes.string,
+        description: PropTypes.string,
+        desc: PropTypes.string,
+      }),
+    ).isRequired,
+  }).isRequired,
+  onOrder: PropTypes.func.isRequired,
+};
+
 export default function Home() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [menu, setMenu] = useState(menuData);
@@ -93,7 +113,7 @@ export default function Home() {
           alt=""
           width="1536"
           height="1024"
-          fetchpriority="high"
+          fetchPriority="high"
           decoding="async"
         />
 

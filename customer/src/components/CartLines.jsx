@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useCart } from "../hooks/useCart.js";
 import { formatPrice } from "../utils/format.js";
 
@@ -55,3 +56,7 @@ export default function CartLines({ compact = false }) {
     </div>
   );
 }
+
+CartLines.propTypes = {
+  compact: PropTypes.bool,
+};

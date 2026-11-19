@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
 import { useCart } from "../hooks/useCart.js";
 import { useModalDialog } from "../hooks/useModalDialog.js";
 import "./OrderPopup.css";
@@ -47,14 +48,21 @@ export default function OrderPopup({ item, onClose }) {
   }
 
   return (
-    <div className="popup" onClick={guardedClose}>
-      <div
+    <div className="popup">
+      <button
+        type="button"
+        className="popup-backdrop"
+        onClick={guardedClose}
+        disabled={isAdding}
+        aria-label="Close dialog"
+        tabIndex={-1}
+      />
+      <dialog
+        open
         className="popup-content"
-        role="dialog"
         aria-modal="true"
         aria-labelledby="popup-title"
         ref={dialogRef}
-        onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
@@ -104,12 +112,25 @@ export default function OrderPopup({ item, onClose }) {
                 +
               </button>
             </div>
-            <button className="order-btn" onClick={handleAdd} disabled={isAdding}>
+            <button type="button" className="order-btn" onClick={handleAdd} disabled={isAdding}>
               {isAdding ? "Adding..." : "Add to cart"}
             </button>
           </div>
         </div>
-      </div>
+      </dialog>
     </div>
   );
 }
+
+OrderPopup.propTypes = {
+  item: PropTypes.shape({
+    _id: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    img: PropTypes.string,
+    image: PropTypes.string,
+    description: PropTypes.string,
+    desc: PropTypes.string,
+  }),
+  onClose: PropTypes.func.isRequired,
+};
